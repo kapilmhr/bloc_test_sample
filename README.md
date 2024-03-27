@@ -1,16 +1,20 @@
-# bloc_testing_sample
 
-A new Flutter project.
+# Bloc architecture with test
 
-## Getting Started
+A new Flutter app with bloc architecture and testing.
 
-This project is a starting point for a Flutter application.
+## Dependencies
 
-A few resources to get you started if this is your first Flutter project:
+```
+dependencies:  
+dio: ^5.4.2  
+equatable: ^2.0.5  
+flutter_bloc: ^8.1.5  
+```
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+```
+dev_dependencies:  
+bloc_test: ^9.1.7  
+mocktail: ^1.0.3
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
