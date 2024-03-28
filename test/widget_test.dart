@@ -5,26 +5,44 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:flutter/material.dart';
+import 'package:bloc_test/bloc_test.dart';
+import 'package:bloc_testing_sample/model/user.dart';
+import 'package:bloc_testing_sample/user_bloc/get_user_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:bloc_testing_sample/main.dart';
+import 'package:mocktail/mocktail.dart';
+
+import 'mock_service.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  group('get_user bloc', () {
+    late MockService mockService;
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    setUp(() {
+      mockService = MockService();
+    });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    test('initial state is get user loading', () {
+      expect(GetUserBloc(userService: mockService).state, GetUserLoading());
+    });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    blocTest<GetUserBloc, GetUserState>(
+      'emits [ GetUserLoading,GetUserError ] when loading fails',
+      setUp: () => when(mockService.getUser).thenThrow(Exception()),
+      build: () => GetUserBloc(userService: mockService),
+      act: (bloc) => bloc.add(GetUser()),
+      expect: () => <GetUserState>[GetUserLoading(), GetUserError()],
+      verify: (_) => verify(mockService.getUser).called(1),
+    );
+
+    blocTest<GetUserBloc, GetUserState>(
+      'emits [ GetUserLoading,GetUserLoaded ]  when loaded successfully',
+      setUp: () =>
+          when(mockService.getUser).thenAnswer((_) async => const User()),
+      build: () => GetUserBloc(userService: mockService),
+      act: (bloc) => bloc.add(GetUser()),
+      expect: () => <GetUserState>[GetUserLoading(), const GetUserLoaded()],
+      verify: (_) => verify(mockService.getUser).called(1),
+    );
   });
 }

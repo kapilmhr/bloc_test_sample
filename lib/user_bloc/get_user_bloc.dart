@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:bloc_testing_sample/repository/user_service.dart';
 import 'package:equatable/equatable.dart';
 
 import '../model/user.dart';
@@ -9,8 +10,8 @@ part 'get_user_event.dart';
 part 'get_user_state.dart';
 
 class GetUserBloc extends Bloc<GetUserEvent, GetUserState> {
-  final UserRepository userRepository;
-  GetUserBloc({required this.userRepository}) : super(GetUserLoading()) {
+  final UserService userService;
+  GetUserBloc({required this.userService}) : super(GetUserLoading()) {
     on<GetUserEvent>(_onGetUser);
   }
 
@@ -18,7 +19,7 @@ class GetUserBloc extends Bloc<GetUserEvent, GetUserState> {
       GetUserEvent event, Emitter<GetUserState> emit) async {
     emit(GetUserLoading());
     try {
-      final user = await userRepository.getUser();
+      final user = await userService.getUser();
       emit(GetUserLoaded(user: user));
     } catch (e) {
       emit(GetUserError());

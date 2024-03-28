@@ -18,3 +18,8 @@ bloc_test: ^9.1.7
 mocktail: ^1.0.3
 ```
 
+### Test covered
+1. Test if the initial state is correct.
+2. Test if the bloc is initialized correctly.
+3. Test if the bloc emits the expected state when it throws an error.
+4. Test if the bloc emits the expected state when it returns a success.
